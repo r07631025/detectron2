@@ -46,6 +46,11 @@ def get_parser():
         help="A list of space separated input images; "
         "or a single glob pattern such as 'directory/*.jpg'",
     )
+    
+    parser.add_argument(
+        "--input_txt",
+    )
+    
     parser.add_argument(
         "--output",
         help="A file or directory to save output visualizations. "
@@ -77,14 +82,20 @@ if __name__ == "__main__":
     cfg = setup_cfg(args)
 
     demo = VisualizationDemo(cfg)
-
-    if args.input:
-        if len(args.input) == 1:
-            args.input = glob.glob(os.path.expanduser(args.input[0]))
-            assert args.input, "The input path(s) was not found"
-        for path in tqdm.tqdm(args.input, disable=not args.output):
+    all_img = [] 
+    with open(args.input_txt, "r") as f:
+      for line in f.readlines():
+        line = line.strip('\n')
+        all_img.append(line)
+    
+    if args.input_txt:
+        #if len(args.input) == 1:
+        #    args.input = glob.glob(os.path.expanduser(args.input[0]))
+        #    assert args.input, "The input path(s) was not found"
+        for path in tqdm.tqdm(all_img, disable=not args.output):
             # use PIL, to be consistent with evaluation
-            img = read_image(path, format="BGR")
+            path = path+'.jpg'
+            img = read_image('../../tmp/data/VOCdevkit2007/VOC2007/JPEGImages/'+path, format="BGR")
             start_time = time.time()
             predictions, visualized_output = demo.run_on_image(img)
             logger.info(

@@ -393,7 +393,16 @@ class Res5ROIHeads(ROIHeads):
         assert not cfg.MODEL.RESNETS.DEFORM_ON_PER_STAGE[-1], \
             "Deformable conv is not yet supported in res5 head."
         # fmt: on
-
+        
+        #hyper 2+3+4
+        #out_channels = 1792*2
+        
+        #hyper 2+4
+        #out_channels = 1280*2
+        
+        #hyper 3+4
+        #out_channels = 1536*2
+        
         blocks = make_stage(
             BottleneckBlock,
             3,

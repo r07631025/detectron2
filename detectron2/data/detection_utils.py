@@ -10,8 +10,8 @@ import numpy as np
 import pycocotools.mask as mask_util
 import torch
 from fvcore.common.file_io import PathManager
-from PIL import Image
-
+#from PIL import Image
+from PIL import Image, ImageOps
 from detectron2.structures import (
     BitMasks,
     Boxes,
@@ -112,6 +112,7 @@ def convert_image_to_rgb(image, format):
             image = image[:, :, 0]
         image = image.astype(np.uint8)
         image = np.asarray(Image.fromarray(image, mode=format).convert("RGB"))
+    
     return image
 
 
@@ -174,9 +175,8 @@ def read_image(file_name, format=None):
     """
     with PathManager.open(file_name, "rb") as f:
         image = Image.open(f)
-
         # work around this bug: https://github.com/python-pillow/Pillow/issues/3973
-        image = _apply_exif_orientation(image)
+        #image = _apply_exif_orientation(image)
 
         return convert_PIL_to_numpy(image, format)
 
@@ -577,8 +577,16 @@ def build_augmentation(cfg, is_train):
         max_size = cfg.INPUT.MAX_SIZE_TEST
         sample_style = "choice"
     augmentation = [T.ResizeShortestEdge(min_size, max_size, sample_style)]
+    '''
     if is_train:
-        augmentation.append(T.RandomFlip())
+        #augmentation.append(T.RandomFlip())
+        augmentation.append(T.RandomFlip(prob=0.5, horizontal=True, vertical=False))
+        augmentation.append(T.RandomFlip(prob=0.5, horizontal=False, vertical=True))
+        augmentation.append(T.RandomSaturation(intensity_min=0.75, intensity_max=1.25))
+        #augmentation.append(T.RandomLighting())
+        augmentation.append(T.RandomBrightness(intensity_min=0.75, intensity_max=1.25))
+        augmentation.append(T.RandomContrast(intensity_min=0.75, intensity_max=1.25))
+    '''
     return augmentation
 
 

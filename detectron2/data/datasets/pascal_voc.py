@@ -15,9 +15,7 @@ __all__ = ["load_voc_instances", "register_pascal_voc"]
 
 # fmt: off
 CLASS_NAMES = (
-    "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat",
-    "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person",
-    "pottedplant", "sheep", "sofa", "train", "tvmonitor"
+    'cucumber_pm','cucumber_dm', 'anthracnose', 'brown_spot','cucumber_health'
 )
 # fmt: on
 
@@ -41,7 +39,7 @@ def load_voc_instances(dirname: str, split: str, class_names: Union[List[str], T
         anno_file = os.path.join(annotation_dirname, fileid + ".xml")
         jpeg_file = os.path.join(dirname, "JPEGImages", fileid + ".jpg")
 
-        with PathManager.open(anno_file) as f:
+        with PathManager.open(anno_file, encoding="utf-8") as f:
             tree = ET.parse(f)
 
         r = {

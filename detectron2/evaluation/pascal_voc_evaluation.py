@@ -13,7 +13,8 @@ from fvcore.common.file_io import PathManager
 
 from detectron2.data import MetadataCatalog
 from detectron2.utils import comm
-
+import pylab as pl
+import matplotlib.pyplot as plt
 from .evaluator import DatasetEvaluator
 
 
@@ -82,7 +83,8 @@ class PascalVOCDetectionEvaluator(DatasetEvaluator):
                 self._dataset_name, 2007 if self._is_2007 else 2012
             )
         )
-
+        legend_class = ('pm','dm','an', 'bs','health')
+        ap_curve = []
         with tempfile.TemporaryDirectory(prefix="pascal_voc_eval_") as dirname:
             res_file_template = os.path.join(dirname, "{}.txt")
 
@@ -103,6 +105,32 @@ class PascalVOCDetectionEvaluator(DatasetEvaluator):
                         use_07_metric=self._is_2007,
                     )
                     aps[thresh].append(ap * 100)
+                    ap_curve += [ap]
+                    if thresh == 50:
+                      pl.plot(rec, prec, lw=2,
+                      label='{}(AP={:.4f})'
+                            ''.format(legend_class[cls_id],ap))
+            print('AP for {} = {:.4f}'.format(cls_name, ap))
+            #with open(os.path.join(output_dir, cls + '_pr.pkl'), 'wb') as f:
+            #    pickle.dump({'rec': rec, 'prec': prec, 'ap': ap}, f)
+            plt.xlabel('Recall',fontsize = 16)
+            plt.ylabel('Precision',fontsize = 16)
+            plt.grid(True)
+            plt.ylim([0.0, 1.05])
+            plt.xlim([0.0, 1.0])
+            plt.grid(False)
+            
+            plt.title('Precision-Recall',fontsize = 18)
+            plt.legend(loc="lower left")     
+            plt.show()
+            #plt.savefig('/home/ubuntu/detectron2/output_aug_270000/pr_curve.png')
+    
+            print('Mean AP = {:.4f}'.format(np.mean(ap_curve)))
+            print('~~~~~~~~')
+            print('Results:')
+            for ap in ap_curve:
+                print('{:.3f}'.format(ap))
+            print('{:.3f}'.format(np.mean(ap_curve)))
 
         ret = OrderedDict()
         mAP = {iou: np.mean(x) for iou, x in aps.items()}
@@ -126,7 +154,7 @@ class PascalVOCDetectionEvaluator(DatasetEvaluator):
 @lru_cache(maxsize=None)
 def parse_rec(filename):
     """Parse a PASCAL VOC xml file."""
-    with PathManager.open(filename) as f:
+    with PathManager.open(filename, encoding =  'utf-8') as f:
         tree = ET.parse(f)
     objects = []
     for obj in tree.findall("object"):

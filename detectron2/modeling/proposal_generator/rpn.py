@@ -89,6 +89,16 @@ class StandardRPNHead(nn.Module):
                 box_dim=4, while a rotated box has box_dim=5.
         """
         super().__init__()
+        
+        #hyper 2+3+4
+        #in_channels = 1792
+        
+        #hyper 2+4
+        #in_channels = 1280 
+        
+        #hyper 3+4
+        #in_channels = 1536 
+        
         # 3x3 conv for the hidden representation
         self.conv = nn.Conv2d(in_channels, in_channels, kernel_size=3, stride=1, padding=1)
         # 1x1 conv for predicting objectness logits
@@ -469,7 +479,7 @@ class RPN(nn.Module):
                 objectness score in descending order.
         """
         # The proposals are treated as fixed for approximate joint training with roi heads.
-        # This approach ignores the derivative w.r.t. the proposal boxes’ coordinates that
+        # This approach ignores the derivative w.r.t. the proposal boxes??coordinates that
         # are also network responses, so is approximate.
         pred_objectness_logits = [t.detach() for t in pred_objectness_logits]
         pred_anchor_deltas = [t.detach() for t in pred_anchor_deltas]

@@ -219,7 +219,8 @@ def register_all_pascal_voc(root):
 
 
 # Register them all under "./datasets"
-_root = os.getenv("DETECTRON2_DATASETS", "datasets")
+#_root = os.getenv("DETECTRON2_DATASETS", "datasets")
+_root = '/home/tmp/VOCdevkit2007/'
 register_all_coco(_root)
 register_all_lvis(_root)
 register_all_cityscapes(_root)

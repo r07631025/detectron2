@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=2 python3 tools/train_net.py --config-file configs/PascalVOC-Detection/faster_rcnn_R_101_C4_3x_origin_600.yaml

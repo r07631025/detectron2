@@ -315,6 +315,7 @@ def apply_augmentations(augmentations: List[Union[Transform, Augmentation]], inp
         inputs = StandardAugInput(inputs)
     else:
         image_only = False
+
     tfms = inputs.apply_augmentations(augmentations)
     return inputs.image if image_only else inputs, tfms
 

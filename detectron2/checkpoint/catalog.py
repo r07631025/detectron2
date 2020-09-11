@@ -30,7 +30,7 @@ class ModelCatalog(object):
     }
 
     C2_DETECTRON_PATH_FORMAT = (
-        "{prefix}/{url}/output/train/{dataset}/{type}/model_final.pkl"  # noqa B950
+        "{prefix}/{url}/output/train/{dataset}/{type}/model_final_.pkl"  # noqa B950
     )
 
     C2_DATASET_COCO = "coco_2014_train%3Acoco_2014_valminusminival"

@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python3 tools/train_net.py --config-file configs/PascalVOC-Detection/faster_rcnn_R_101_C4_3x_hyper.yaml --eval-only MODEL.WEIGHTS output_hyper_34/model_final.pth
